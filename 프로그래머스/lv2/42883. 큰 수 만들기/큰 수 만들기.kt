@@ -1,5 +1,4 @@
 import java.util.ArrayDeque
-import java.util.Stack
 
 class Solution {
     fun solution(number: String, k: Int): String {
@@ -28,8 +27,6 @@ class Solution {
             dq.addLast(number[i].toString().toInt())
 
         }
-        println(count)
-        
         
         repeat(number.length-k){
             answer.append(dq.pollFirst())
