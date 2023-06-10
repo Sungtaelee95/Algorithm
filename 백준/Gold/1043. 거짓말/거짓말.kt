@@ -5,7 +5,7 @@ import java.io.OutputStreamWriter
 import java.util.*
 
 lateinit var human: IntArray
-//val bw = BufferedWriter(OutputStreamWriter(System.out))
+//val bw = BufferedWriter(OutputStreamWriter(System.out)) 테스트
 fun main() {
     val br = BufferedReader(InputStreamReader(System.`in`))
     //val bw = BufferedWriter(OutputStreamWriter(System.out))
