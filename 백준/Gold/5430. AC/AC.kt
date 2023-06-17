@@ -14,21 +14,11 @@ fun main(){
 
     repeat(N){
         val commend = br.readLine()
-        var dq = ArrayDeque<Int>()
+
         var dqSize = br.readLine().toInt()
 
-        var sb = StringBuilder()
+        var dq = ArrayDeque(br.readLine().replace("[","").replace("]","").split(","))
 
-        br.readLine().forEach {
-            if(it in '0' .. '9'){
-                sb.append(it.toString())
-            } else {
-                if(!sb.isEmpty()){
-                    dq.addLast(sb.toString().toInt())
-                    sb.clear()
-                }
-            }
-        }
 
         var chk = true
         var start = true // t = 앞에서, f = 뒤에서
@@ -38,7 +28,7 @@ fun main(){
                     start = !start
                 }
                 'D' ->{
-                    if(dq.isEmpty()) {
+                    if(dq.isEmpty() || dq.peekLast() == "") {
                         chk = false
                         break
                     }
@@ -53,6 +43,7 @@ fun main(){
         }
 
         if(chk){
+
             if(start){
                 bw.append("[")
                 while(!dq.isEmpty()){
@@ -69,10 +60,10 @@ fun main(){
                 bw.append("]")
             }
             bw.appendLine()
-        } else {
+
+        } else{
             bw.appendLine("error")
         }
-
     }
 
     bw.flush()
