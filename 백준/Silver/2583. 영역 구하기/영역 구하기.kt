@@ -33,30 +33,11 @@ fun main(){
         val sRow = st.nextToken().toInt() // 0
         val eCol = st.nextToken().toInt()-1
         val eRow = st.nextToken().toInt()-1
+        
 
-        val start = Info(sRow, sCol)
-        val end = Info(eRow, eCol)
-        val tempMap = Array(mapRow) {BooleanArray(mapCol)}
-
-        tempMap[sRow][sCol] = true
-        dq.add(start)
-        while(!dq.isEmpty()){
-            val now = dq.pollFirst()
-            for(i in 0 .. 3){
-                val nextRow = now.row + nr[i]
-                val nextCol = now.col + nc[i]
-
-                if(nextRow < 0 || nextCol < 0 || nextRow >= mapRow || nextCol >= mapCol) continue
-                if(nextRow < start.row || nextCol < start.col || nextRow > end.row || nextCol > end.col) continue
-                if(tempMap[nextRow][nextCol]) continue
-                tempMap[nextRow][nextCol] = true
-                dq.addLast(Info(nextRow, nextCol))
-            }
-        }
-
-        for(row in 0 .. tempMap.size-1){
-            for(col in 0 .. tempMap[row].size-1){
-                if(tempMap[row][col]) map[row][col] = true
+        for(row in sRow .. eRow){
+            for(col in sCol .. eCol){
+                map[row][col] = true
             }
         }
     }
