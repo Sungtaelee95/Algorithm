@@ -22,17 +22,29 @@ fun main(){
     val nomalMap = Array(N) {IntArray(N)}
     val blindnessMap = Array(N) {IntArray(N)}
 
-    for(i in 0 until N){
-        val lineColor = br.readLine()
-        for(j in 0 until N){
-            space[i][j] = lineColor[j]
-        }
-    }
+    extracted(N, br, space)
 
+    var nomalCount = i(N, nomalMap, space, rowArr, colArr)
+
+    extracted(N, blindnessMap, space, rowArr, colArr, bw, nomalCount)
+    
+
+    bw.flush()
+    bw.close()
+
+}
+
+private fun i(
+    N: Int,
+    nomalMap: Array<IntArray>,
+    space: Array<CharArray>,
+    rowArr: IntArray,
+    colArr: IntArray
+): Int {
     var nomalCount = 0
-    for(row in 0 until N){
-        for(col in 0 until N){
-            if(nomalMap[row][col] != 0) continue
+    for (row in 0 until N) {
+        for (col in 0 until N) {
+            if (nomalMap[row][col] != 0) continue
             nomalCount++
 
             val dq = ArrayDeque<Info>()
@@ -41,11 +53,11 @@ fun main(){
 
             val check = space[row][col]
 
-            while (!dq.isEmpty()){
+            while (!dq.isEmpty()) {
                 val now = dq.pollFirst()
                 nomalMap[now.row][now.col] = nomalCount
 
-                for(i in 0 .. 3){
+                for (i in 0..3) {
                     val nextRow = now.row + rowArr[i]
                     val nextCol = now.col + colArr[i]
 
@@ -60,24 +72,35 @@ fun main(){
             }
         }
     }
+    return nomalCount
+}
 
+private fun extracted(
+    N: Int,
+    blindnessMap: Array<IntArray>,
+    space: Array<CharArray>,
+    rowArr: IntArray,
+    colArr: IntArray,
+    bw: BufferedWriter,
+    nomalCount: Int
+) {
     var blindnessCount = 0
-    for(row in 0 until N){
-        for(col in 0 until N){
-            if(blindnessMap[row][col] != 0) continue
+    for (row in 0 until N) {
+        for (col in 0 until N) {
+            if (blindnessMap[row][col] != 0) continue
             blindnessCount++
 
             val dq = ArrayDeque<Info>()
             dq.add(Info(row, col))
             blindnessMap[row][col] = blindnessCount
 
-            val check = if(space[row][col] == 'B') "B" else "RG"
+            val check = if (space[row][col] == 'B') "B" else "RG"
 
-            while (!dq.isEmpty()){
+            while (!dq.isEmpty()) {
                 val now = dq.pollFirst()
                 blindnessMap[now.row][now.col] = blindnessCount
 
-                for(i in 0 .. 3){
+                for (i in 0..3) {
                     val nextRow = now.row + rowArr[i]
                     val nextCol = now.col + colArr[i]
 
@@ -93,8 +116,13 @@ fun main(){
         }
     }
     bw.append("$nomalCount $blindnessCount")
+}
 
-    bw.flush()
-    bw.close()
-
+private fun extracted(N: Int, br: BufferedReader, space: Array<CharArray>) {
+    for (i in 0 until N) {
+        val lineColor = br.readLine()
+        for (j in 0 until N) {
+            space[i][j] = lineColor[j]
+        }
+    }
 }
