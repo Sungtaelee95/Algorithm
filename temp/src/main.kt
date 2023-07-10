@@ -3,40 +3,60 @@ import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.ArrayDeque
+import java.util.LinkedList
+import java.util.Stack
 import java.util.StringTokenizer
+
+data class Info(val position: Int, val count:Int)
 fun main(){
     val br = BufferedReader(InputStreamReader(System.`in`))
     val bw = BufferedWriter(OutputStreamWriter(System.out))
-    var st = StringTokenizer(br.readLine())
+    val st = StringTokenizer(br.readLine())
 
     val N = st.nextToken().toInt()
+    val M = st.nextToken().toInt()
 
-    st = StringTokenizer(br.readLine())
+    val dq = ArrayDeque<Info>()
+    val loadMap = IntArray(200001){0}
+    dq.addLast(Info(N, 0))
+    val visit = IntArray(200001){0}
+    visit[N] = 1
+    var count = 0
 
-    var dq = ArrayDeque<Pair<Int,Int>>()
-
-    for(i in 1 .. N){
-
-        val new = Pair(st.nextToken().toInt(), i)
-
-        while(!dq.isEmpty()){
-            if(dq.peekLast().first <= new.first) {
-                dq.pollLast()
-            } else {
-                bw.append("${dq.peekLast().second} ")
-                dq.add(new)
-                break
-            }
+    while(!dq.isEmpty()){
+        val now = dq.pollFirst()
+        if(now.position == M){
+            bw.appendLine("${now.count}")
+            count = now.count
+            break
         }
 
-        if(dq.isEmpty()){
-            dq.add(new)
-            bw.append("0 ")
+        if(now.position * 2 <= M && (visit[now.position * 2] > now.count+1 || visit[now.position * 2] == 0) ){
+            visit[now.position * 2] = visit[now.position]+1
+            dq.addLast(Info(now.position*2, now.count + 1,))
         }
-
+        if(now.position + 1 <= M && (visit[now.position + 1] > now.count + 1 || visit[now.position + 1] == 0)){
+            visit[now.position + 1] =visit[now.position]+1
+            dq.addLast(Info(now.position+1, now.count + 1))
+        }
+        if(now.position - 1 >= 0 && (visit[now.position - 1] > now.count + 1 || visit[now.position - 1] == 0)){
+            visit[now.position - 1] = visit[now.position]+1
+            dq.addLast(Info(now.position-1, now.count + 1))
+        }
     }
 
+    for(i in 1 .. 10){
+        print("${loadMap[i]} ")
+    }
+
+    dq.clear()
+//    dq.addLast(Info(M, count+1))
+//
+//    while(!dq.isEmpty()){
+//
+//    }
 
     bw.flush()
     bw.close()
 }
+
