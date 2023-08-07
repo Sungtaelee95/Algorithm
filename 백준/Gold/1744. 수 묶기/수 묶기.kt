@@ -10,7 +10,7 @@ fun main() {
     var st = StringTokenizer(br.readLine())
     val N = st.nextToken().toInt()
 
-    var pq = PriorityQueue<Int>(kotlin.Comparator { o1, o2 ->  o2.compareTo(o1)})
+    var pq = PriorityQueue<Int>{ o1, o2 ->  o2.compareTo(o1)}
     var pq2 = PriorityQueue<Int>()
 
     repeat(N){

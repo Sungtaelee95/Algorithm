@@ -5,8 +5,6 @@ import java.io.OutputStreamWriter
 import java.lang.Math.max
 import java.util.*
 
-data class info(val idx: Int, val value: Int)
-
 fun main() {
 //    val s = System.currentTimeMillis()
     var br = BufferedReader(InputStreamReader(System.`in`))
@@ -24,6 +22,7 @@ fun main() {
     Arrays.sort(arr)
     var arr2 = IntArray(N){0}
     arr2[0] = arr[0]
+
     for(i in 1 .. arr.size-1){
         arr2[i] = arr2[i-1]+arr[i]
     }
