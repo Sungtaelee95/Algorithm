@@ -11,7 +11,7 @@ fun main() {
     val N = st.nextToken().toInt()
     val D = st.nextToken().toInt()
 
-    val loadInfo = PriorityQueue<Node>(kotlin.Comparator { o1, o2 -> o1.start.compareTo(o2.start) })
+    var loadInfo = mutableListOf<Node>()
     repeat(N) {
         st = StringTokenizer(br.readLine())
         val start = st.nextToken().toInt()
@@ -22,15 +22,14 @@ fun main() {
 
     val distInfo = IntArray(10_001) { it }
 
-    while (!loadInfo.isEmpty()) {
-        val node = loadInfo.poll()
+    for (node in loadInfo.sortedBy { it.start }) {
         distInfo[node.next] = Math.min(distInfo[node.next], distInfo[node.start] + node.dist)
         for (i in node.next until distInfo.size - 1) {
             distInfo[i + 1] = Math.min(distInfo[i + 1], distInfo[i] + 1)
             if(i > D) break
         }
     }
-    
+
     bw.append("${distInfo[D]}")
 
     bw.flush()
