@@ -72,8 +72,6 @@ fun main() {
             val distArr = IntArray(9)
             repeat(9) {
                 distArr[it] = abs(jongsuPosition.row - (now.row + directions[it].row)) + abs(jongsuPosition.col - (now.col + directions[it].col))
-                if (now.row + directions[it].row < 0 || now.row + directions[it].row >= R ||
-                    now.col + directions[it].col < 0 || now.col + directions[it].col >= C) distArr[it] = Int.MAX_VALUE
             }
             val nextCommend = directions[distArr.indexOf(distArr.min())]
             val nextPosition = Position(now.row + nextCommend.row, now.col + nextCommend.col)
