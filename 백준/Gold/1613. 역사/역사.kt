@@ -8,28 +8,34 @@ fun main() {
     val N = st.nextToken().toInt()
     val K = st.nextToken().toInt()
 
-    val loadMap = Array(N + 1) { IntArray(N + 1) { 0 } }
+    val loadMap = Array(N + 1) { BooleanArray(N + 1) }
 
     repeat(K) {
         st = StringTokenizer(br.readLine())
         val front = st.nextToken().toInt()
         val back = st.nextToken().toInt()
-        loadMap[front][back] = -1
-        loadMap[back][front] = 1
+        loadMap[front][back] = true
     }
 
     for (k in 1..N) {
         for (i in 1..N) {
+            if (i == k) continue
             for (j in 1..N) {
-                if (loadMap[i][k] == -1 && loadMap[k][j] == -1) loadMap[i][j] = -1
-                if (loadMap[i][k] == 1 && loadMap[k][j] == 1) loadMap[i][j] = 1
+                if (i == j) continue
+                if (loadMap[i][k] && loadMap[k][j] ) loadMap[i][j] = true
             }
         }
     }
 
     repeat(br.readLine().toInt()) {
         st = StringTokenizer(br.readLine())
-        bw.appendLine("${loadMap[st.nextToken().toInt()][st.nextToken().toInt()]}")
+        val a = st.nextToken().toInt()
+        val b = st.nextToken().toInt()
+        when {
+            loadMap[a][b] -> bw.appendLine("-1")
+            loadMap[b][a] -> bw.appendLine("1")
+            else -> bw.appendLine("0")
+        }
     }
 
     bw.flush()
