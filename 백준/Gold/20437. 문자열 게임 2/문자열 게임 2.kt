@@ -28,13 +28,17 @@ fun main() {
             } else {
                 tempMap[str] = mutableListOf(i)
             }
-            if (tempMap[str]!!.size >= k) {
-                for (j in 0 .. tempMap[str]!!.size - k) {
-                    resultOne = minOf(resultOne, tempMap[str]!![j + k -1] - tempMap[str]!![j] + 1)
-                    resultTwo = maxOf(resultTwo, tempMap[str]!![j + k - 1] - tempMap[str]!![j] + 1)
+        }
+
+        tempMap.forEach {
+            if (it.value.size >= k) {
+                for (j in 0 .. it.value.size - k) {
+                    resultOne = minOf(resultOne, it.value[j + k -1] - it.value[j] + 1)
+                    resultTwo = maxOf(resultTwo, it.value[j + k - 1] - it.value[j] + 1)
                 }
             }
         }
+
         if (resultOne == Int.MAX_VALUE) {
             bw.appendLine("-1")
         } else {
