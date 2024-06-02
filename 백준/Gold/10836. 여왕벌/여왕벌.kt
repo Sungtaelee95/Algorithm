@@ -3,7 +3,6 @@ import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.*
-import kotlin.collections.ArrayDeque
 
 fun main() {
     val br = BufferedReader(InputStreamReader(System.`in`))
@@ -14,27 +13,31 @@ fun main() {
     val n = st.nextToken().toInt()
 
     val bug = Array(m) { IntArray(m) { 1 } } // 벌레들
-
+    val up = IntArray(2 * m - 1) { 0 } // 성장기록
     repeat(n) {
-        val up = Array(m) { IntArray(m) { 0 } } // 성장기록
         st = StringTokenizer(br.readLine())
-        val dq = ArrayDeque<Int>()
-        repeat(st.nextToken().toInt()) { dq.addLast(0) }
-        repeat(st.nextToken().toInt()) { dq.addLast(1) }
-        repeat(st.nextToken().toInt()) { dq.addLast(2) }
-        for (i in m - 1 downTo 0) {
-            up[i][0] = dq.removeFirst()
-            bug[i][0] += up[i][0]
+        val zero = st.nextToken().toInt()
+        val one = st.nextToken().toInt()
+        val two = st.nextToken().toInt()
+        for (i in zero until zero + one) {
+            up[i]++
         }
+        for (i in zero + one until 2 * m - 1) {
+            up[i] += 2
+        }
+    }
+    var index = 0
+    for (i in m - 1 downTo 0) {
+        bug[i][0] += up[index]
+        index++
+    }
+    for (i in 1 until m) {
+        bug[0][i] += up[index]
+        index++
+    }
+    for (col in 1 until m) {
         for (i in 1 until m) {
-            up[0][i] = dq.removeFirst()
-            bug[0][i] += up[0][i]
-        }
-        for (row in 1 until m) {
-            for (col in 1 until m) {
-                up[row][col] = maxOf(up[row][col - 1], maxOf(up[row - 1][col - 1], up[row - 1][col]))
-                bug[row][col] += up[row][col]
-            }
+            bug[i][col] = bug[0][col]
         }
     }
 
