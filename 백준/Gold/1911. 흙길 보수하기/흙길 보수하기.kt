@@ -10,13 +10,13 @@ fun main() {
     var st = StringTokenizer(br.readLine())
 
     val n = st.nextToken().toInt()
-    val l = st.nextToken().toLong()-1L
+    val l = st.nextToken().toInt()
 
     val holes = mutableListOf<Hole>()
 
     repeat(n) {
         st = StringTokenizer(br.readLine())
-        val hole = Hole(st.nextToken().toLong(), st.nextToken().toLong())
+        val hole = Hole(st.nextToken().toInt(), st.nextToken().toInt())
         holes.add(hole)
     }
 
@@ -28,12 +28,16 @@ fun main() {
     })
 
     var count = 0
-    var lastIndex = -1L
+    var lastIndex = 0
     holes.forEach {
-        for (i in it.start until it.end) {
-            if (lastIndex < i) {
-                count++
-                lastIndex = i + l
+        if (lastIndex < it.end) {
+            if (lastIndex < it.start) lastIndex = it.start
+            if ((it.end - lastIndex) % l == 0) {
+                count += ((it.end - lastIndex) / l)
+                lastIndex += l * ((it.end - lastIndex) / l)
+            } else {
+                count += ((it.end - lastIndex) / l) + 1
+                lastIndex += l * (((it.end - lastIndex) / l) + 1)
             }
         }
     }
@@ -44,4 +48,4 @@ fun main() {
     bw.close()
 }
 
-data class Hole(val start: Long, val end: Long)
+data class Hole(val start: Int, val end: Int)
