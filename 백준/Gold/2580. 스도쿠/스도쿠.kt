@@ -5,8 +5,9 @@ import java.io.OutputStreamWriter
 import java.util.*
 
 val board = Array(10) { IntArray((10)) }
-val rows = intArrayOf(0, 0, 1, -1)
-val cols = intArrayOf(1, -1, 0, 0)
+val rowCheck =  Array(10) { BooleanArray((10)) }
+val colCheck =  Array(10) { BooleanArray((10)) }
+val rectangleCheck = Array(10) { BooleanArray((10)) }
 val bw = BufferedWriter(OutputStreamWriter(System.out))
 var endCheck = false
 fun main() {
@@ -16,61 +17,54 @@ fun main() {
         val st = StringTokenizer(br.readLine())
         repeat(9) { col ->
             board[row][col] = st.nextToken().toInt()
+            if (board[row][col] != 0) {
+                rowCheck[row][board[row][col]] = true
+                colCheck[col][board[row][col]] = true
+                rectangleCheck[row/3*3+col/3][board[row][col]] = true
+            }
         }
     }
 
-    dfs(Node(0, 0))
+    dfs(0,0)
 
     bw.flush()
     bw.close()
 }
 
-fun dfs(node: Node) {
-    if (endCheck) return
-    if (node.col == 9) {
-        val new = Node(node.row + 1, 0)
-        dfs(new)
-    }
-    if (node.row == 9) {
-        for (i in 0..8) {
-            for (j in 0..8) {
+fun dfs(row: Int, col: Int) {
+    if(endCheck) return
+    if (row == 9) {
+        for (i in 0 .. 8) {
+            for (j in 0 .. 8) {
                 bw.append("${board[i][j]} ")
             }
             bw.appendLine()
         }
         endCheck = true
-        return
     }
-    if (board[node.row][node.col] == 0) {
-        for (i in 1..9) {
-            if (!whIsContains(i, node) && !rectangleIsContains(i, node)) {
-                board[node.row][node.col] = i
-                dfs(Node(node.row, node.col + 1))
+    if (col == 9) {
+        dfs(row+1, 0)
+    }
+
+    if (board[row][col] == 0) {
+        for (i in 1 .. 9) {
+            if (!rowCheck[row][i] &&
+                !colCheck[col][i] &&
+                !rectangleCheck[row/3*3+col/3][i]
+                ) {
+                rowCheck[row][i] = true
+                colCheck[col][i] = true
+                rectangleCheck[row/3*3+col/3][i] = true
+                board[row][col] = i
+                dfs(row, col+1)
+                rowCheck[row][i] = false
+                colCheck[col][i] = false
+                rectangleCheck[row/3*3+col/3][i] = false
+                board[row][col] = 0
             }
         }
-        board[node.row][node.col] = 0
     } else {
-        dfs(Node(node.row, node.col + 1))
+        dfs(row, col+1)
     }
-}
 
-fun whIsContains(num: Int, node: Node): Boolean {
-    for (i in 0..8) {
-        if (board[i][node.col] == num) return true
-        if (board[node.row][i] == num) return true
-    }
-    return false
 }
-
-fun rectangleIsContains(num: Int, node: Node): Boolean {
-    val sRow = (node.row / 3) * 3
-    val sCol = (node.col / 3) * 3
-    for (i in sRow..sRow + 2) {
-        for (j in sCol..sCol + 2) {
-            if (board[i][j] == num) return true
-        }
-    }
-    return false
-}
-
-data class Node(val row: Int, val col: Int)
