@@ -3,11 +3,9 @@ import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.*
-import kotlin.collections.ArrayDeque
-import kotlin.math.min
 
 val visit = BooleanArray(26)
-val words = mutableListOf<Set<Char>>()
+lateinit var words: Array<String>
 var result = 0
 fun main() {
     val br = BufferedReader(InputStreamReader(System.`in`))
@@ -33,12 +31,12 @@ fun main() {
     visit['t' - 'a'] = true
     visit['i' - 'a'] = true
     visit['c' - 'a'] = true
-
+    words = Array(n) { "" }
     repeat(n) {
-        words.add(br.readLine().replace("anta", "").replace("tica", "").toSet())
+        words[it] = br.readLine().replace("anta", "").replace("tica", "")
     }
 
-    dfs(k-5, 0)
+    dfs(k - 5, 0)
 
     bw.append("$result")
 
@@ -64,10 +62,10 @@ fun dfs(k: Int, idx: Int) {
         return
     }
 
-    for (i in idx+1..25) {
+    for (i in idx + 1..25) {
         if (!visit[i]) {
             visit[i] = true
-            dfs(k-1, i)
+            dfs(k - 1, i)
             visit[i] = false
         }
     }
