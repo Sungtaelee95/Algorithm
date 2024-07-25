@@ -13,31 +13,25 @@ fun main() {
     var st = StringTokenizer(br.readLine())
     val n = st.nextToken().toInt()
 
-    val rows = DoubleArray(n)
-    val cols = DoubleArray(n)
+    val rows = LongArray(n)
+    val cols = LongArray(n)
     repeat(n) {
         st = StringTokenizer(br.readLine())
-        rows[it] = st.nextToken().toDouble()
-        cols[it] = st.nextToken().toDouble()
+        rows[it] = st.nextToken().toLong()
+        cols[it] = st.nextToken().toLong()
     }
-    var num1 = 0.0
+    var result = 0L
     for (i in 0 until n) {
-        if (i == n-1) {
-            num1 += rows[i] * cols[0]
+        if (i == n - 1) {
+            result += rows[i] * cols[0]
+            result -= cols[i] * rows[0]
             continue
         }
-        num1 += rows[i] * cols[i + 1]
+        result += rows[i] * cols[i + 1]
+        result -= cols[i] * rows[i + 1]
     }
-    var num2 = 0.0
-    for (i in 0 until n) {
-        if (i == n-1) {
-            num2 += cols[i] * rows[0]
-            continue
-        }
-        num2 += cols[i] * rows[i + 1]
-    }
-    val result = kotlin.math.abs(round(((num1 - num2) / 2.0) * 10.0) / 10.0)
-    bw.append("%.1f".format(result))
+
+    bw.append(String.format("%.1f", abs(result / 2.0)))
 
     bw.flush()
     bw.close()
