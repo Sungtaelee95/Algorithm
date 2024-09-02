@@ -6,7 +6,6 @@ import java.util.*
 import kotlin.collections.ArrayDeque
 
 lateinit var map: Array<IntArray>
-lateinit var visit: Array<BooleanArray>
 lateinit var jihun: Node
 var fires = mutableListOf<Node>()
 var result = Int.MAX_VALUE
@@ -41,7 +40,6 @@ fun main() {
 }
 
 fun bfs(isJihun: Boolean) {
-    visit = Array(r) { BooleanArray(c) }
     val dq = ArrayDeque<Node>()
     val nextRow = intArrayOf(0, 0, 1, -1)
     val nextCol = intArrayOf(-1, 1, 0, 0)
