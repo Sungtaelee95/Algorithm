@@ -20,22 +20,18 @@ fun main() {
 
     map = Array(n) {
         st = StringTokenizer(br.readLine())
-        Array(n) { Board(st.nextToken().toInt(), ArrayDeque<Piece>()) }
+        Array(n) { Board(st.nextToken().toInt(), ArrayDeque()) }
     }
 
-    val pieces = Array<Piece>(k) {
+    repeat(k) {
         st = StringTokenizer(br.readLine())
-        val row = st.nextToken().toInt() - 1
-        val col = st.nextToken().toInt() - 1
-        val direction = st.nextToken().toInt()
         val piece = Piece(
-            row,
-            col,
-            direction,
+            st.nextToken().toInt() - 1,
+            st.nextToken().toInt() - 1,
+            st.nextToken().toInt(),
             it
         )
-        map[row][col].dq.addLast(piece)
-        piece
+        map[piece.row][piece.col].dq.addLast(piece)
     }
     var flag = false
     for (i in 1..1000) {
@@ -44,57 +40,32 @@ fun main() {
             // 이동할 말 추출
             for (r in 0 until n) {
                 for (c in 0 until n) {
-                    while (map[r][c].dq.filter { it.num == j }.isNotEmpty()) {
+                    while (map[r][c].dq.any { it.num == j }) {
                         dq.addFirst(map[r][c].dq.removeLast())
                     }
                 }
             }
-            val oriR = dq.first().row
-            val oriC = dq.first().col
             // 이동할 위치 확인
             val nextNode = dq.first().getNextPosition()
             // 벽이든 파란칸 양쪽이라서 못움직이는 경우
-            if (oriR == nextNode.row && oriC == nextNode.col) {
+            if (!dq.first().movePossible) {
+                dq.first().movePossible = true
                 while (dq.isNotEmpty()) {
-                    val movePiece = dq.removeFirst()
-                    for (t in 0 until k) {
-                        if (pieces[t].num == movePiece.num) pieces[t] = movePiece
-                    }
-                    map[nextNode.row][nextNode.col].dq.addLast(movePiece)
+                    map[nextNode.row][nextNode.col].dq.addLast(dq.removeFirst())
                 }
             } else {
                 // 이동 처리
-                when (map[nextNode.row][nextNode.col].color) {
-                    WHITE -> {
-                        while (dq.isNotEmpty()) {
-                            val movePiece = dq.removeFirst()
-                            for (t in 0 until k) {
-                                if (pieces[t].num == movePiece.num) {
-                                    movePiece.row = nextNode.row
-                                    movePiece.col = nextNode.col
-                                    pieces[t] = movePiece
-                                }
-                            }
-                            map[nextNode.row][nextNode.col].dq.addLast(movePiece)
-                        }
+                while (dq.isNotEmpty()) {
+                    val movePiece = when (map[nextNode.row][nextNode.col].color) {
+                        RED -> dq.removeLast()
+                        WHITE -> dq.removeFirst()
+                        else -> Piece(0, 0, 0, 0)
                     }
-
-                    RED -> {
-                        while (dq.isNotEmpty()) {
-                            val movePiece = dq.removeLast()
-                            for (t in 0 until k) {
-                                if (pieces[t].num == movePiece.num) {
-                                    movePiece.row = nextNode.row
-                                    movePiece.col = nextNode.col
-                                    pieces[t] = movePiece
-                                }
-                            }
-                            map[nextNode.row][nextNode.col].dq.addLast(movePiece)
-                        }
-                    }
+                    movePiece.row = nextNode.row
+                    movePiece.col = nextNode.col
+                    map[nextNode.row][nextNode.col].dq.addLast(movePiece)
                 }
             }
-
             if (map[nextNode.row][nextNode.col].dq.size >= 4) {
                 flag = true
                 break
@@ -117,7 +88,7 @@ data class Board(val color: Int, val dq: ArrayDeque<Piece>)
 val rows = intArrayOf(0, 0, 0, -1, 1)
 val cols = intArrayOf(0, 1, -1, 0, 0)
 
-data class Piece(var row: Int, var col: Int, var direction: Int, val num: Int) {
+data class Piece(var row: Int, var col: Int, var direction: Int, val num: Int, var movePossible: Boolean = true) {
 
     fun getNextPosition(): Node {
         var nr = row + rows[direction]
@@ -131,6 +102,7 @@ data class Piece(var row: Int, var col: Int, var direction: Int, val num: Int) {
             if (nr < 0 || nc < 0 || nr >= n || nc >= n || map[nr][nc].color == BLUE) {
                 nr -= rows[direction]
                 nc -= cols[direction]
+                movePossible = false
             }
         }
         return Node(nr, nc)
