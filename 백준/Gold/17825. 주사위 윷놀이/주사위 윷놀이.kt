@@ -28,14 +28,14 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     val bw = BufferedWriter(OutputStreamWriter(System.out))
     val st = StringTokenizer(readLine())
     movePoint = IntArray(10) { st.nextToken().toInt() }
-    simul(0, 0)
+    simulate(0, 0)
 
     bw.append("$result")
     bw.flush()
     bw.close()
 }
 
-fun simul(deep: Int, score: Int) {
+fun simulate(deep: Int, score: Int) {
 
     result = maxOf(result, score)
     if (deep == 10) return
@@ -53,7 +53,7 @@ fun simul(deep: Int, score: Int) {
                         pieces[i].isHidden = true
                         pieces[i].row = 0
                         pieces[i].col = 0
-                        simul(deep + 1, score + hiddenArr[0][0])
+                        simulate(deep + 1, score + hiddenArr[0][0])
                         hiddenVisited[0][0] = false
                     }
                 }
@@ -64,7 +64,7 @@ fun simul(deep: Int, score: Int) {
                         pieces[i].isHidden = true
                         pieces[i].row = 1
                         pieces[i].col = 0
-                        simul(deep + 1, score + hiddenArr[1][0])
+                        simulate(deep + 1, score + hiddenArr[1][0])
                         hiddenVisited[1][0] = false
                     }
                 }
@@ -75,7 +75,7 @@ fun simul(deep: Int, score: Int) {
                         pieces[i].isHidden = true
                         pieces[i].row = 2
                         pieces[i].col = 0
-                        simul(deep + 1, score + hiddenArr[2][0])
+                        simulate(deep + 1, score + hiddenArr[2][0])
                         hiddenVisited[2][0] = false
                     }
                 }
@@ -86,7 +86,7 @@ fun simul(deep: Int, score: Int) {
                         pieces[i].isHidden = true
                         pieces[i].row = 3
                         pieces[i].col = 3
-                        simul(deep + 1, score + hiddenArr[3][3])
+                        simulate(deep + 1, score + hiddenArr[3][3])
                         hiddenVisited[3][3] = false
                     }
                 }
@@ -95,7 +95,7 @@ fun simul(deep: Int, score: Int) {
                     if (!normalVisited[nextDist]) { // 다음 방향에 말이 있는지 확인.
                         normalVisited[nextDist] = true
                         pieces[i].dist = nextDist
-                        simul(deep + 1, score + normalArr[nextDist])
+                        simulate(deep + 1, score + normalArr[nextDist])
                         normalVisited[nextDist] = false
                     }
                 }
@@ -104,12 +104,7 @@ fun simul(deep: Int, score: Int) {
         } else { // 지름길 빠짐.
             var nr = pieces[i].row
             var nc = pieces[i].col
-//            val hiddenArr = arrayOf(
-//                intArrayOf(10, 13, 16, 19),
-//                intArrayOf(20, 22, 24),
-//                intArrayOf(30, 28, 27, 26),
-//                intArrayOf(25, 30, 35, 40)
-//            )
+            
             hiddenVisited[pieces[i].row][pieces[i].col] = false
             if (nr < 4) {
                 for (j in 1..movePoint[deep]) {
@@ -130,11 +125,11 @@ fun simul(deep: Int, score: Int) {
                         hiddenVisited[nr][nc] = true
                         pieces[i].row = nr
                         pieces[i].col = nc
-                        simul(deep + 1, score + hiddenArr[nr][nc])
+                        simulate(deep + 1, score + hiddenArr[nr][nc])
                         hiddenVisited[nr][nc] = false
                     }
                 } else {
-                    simul(deep + 1, score)
+                    simulate(deep + 1, score)
                 }
             }
             hiddenVisited[ori.row][ori.col] = true
