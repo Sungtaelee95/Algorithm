@@ -104,20 +104,18 @@ fun simulate(deep: Int, score: Int) {
         } else { // 지름길 빠짐.
             var nr = pieces[i].row
             var nc = pieces[i].col
-            
+
             hiddenVisited[pieces[i].row][pieces[i].col] = false
             if (nr < 4) {
-                for (j in 1..movePoint[deep]) {
-                    nc++
+                nc += movePoint[deep]
+                if (hiddenArr[nr].size <= nc) {
+                    if (nr < 3) {
+                        nc -= hiddenArr[nr].size
+                        nr = 3
+                    }
                     if (hiddenArr[nr].size <= nc) {
-                        if (nr < 3) {
-                            nr = 3
-                            nc = 0
-                        } else {
-                            nr = 4
-                            nc = 0
-                            break
-                        }
+                        nr = 4
+                        nc = 0
                     }
                 }
                 if (nr < 4) {
