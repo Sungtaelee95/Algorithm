@@ -61,19 +61,14 @@ fun main() {
                 } ?: continue
             }
         }
-
+        var count = 0
         for (r in 0 until n) {
             for (c in 0 until n) {
                 if (newSharkMap[r][c] != null) {
                     smokeMap[r][c].add(Smoke(newSharkMap[r][c]!!.id, i))
+                    count++
                 }
                 smokeMap[r][c] = smokeMap[r][c].filter { i - it.time < k }.toMutableList()
-            }
-        }
-        var count = 0
-        for (r in 0 until n) {
-            for (c in 0 until n) {
-                if (newSharkMap[r][c] != null) count++
             }
         }
         if (count == 1) {
@@ -108,15 +103,15 @@ class Shark(
     }
 
     fun calculateNext(): Shark {
+        val pri = when (dir) {
+            0 -> upPri
+            1 -> downPri
+            2 -> leftPri
+            3 -> rightPri
+            else -> listOf(0)
+        }
         // 냄새 없는 곳 먼저 확인
         for (i in 0..3) {
-            val pri = when (dir) {
-                0 -> upPri
-                1 -> downPri
-                2 -> leftPri
-                3 -> rightPri
-                else -> listOf(0)
-            }
             val nr = node.row + dirs[pri[i] - 1].row
             val nc = node.col + dirs[pri[i] - 1].col
             if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue
@@ -134,17 +129,10 @@ class Shark(
         }
         // 냄새가 안나는 곳이 없는 경우
         for (i in 0..3) {
-            val pri = when (dir) {
-                0 -> upPri
-                1 -> downPri
-                2 -> leftPri
-                3 -> rightPri
-                else -> listOf(0)
-            }
             val nr = node.row + dirs[pri[i] - 1].row
             val nc = node.col + dirs[pri[i] - 1].col
             if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue
-            if (smokeMap[nr][nc].find { it.id == this.id } != null) {
+            if (smokeMap[nr][nc].find { it.id == id } != null) {
                 return Shark(
                     this.id,
                     Node(nr, nc),
@@ -156,7 +144,6 @@ class Shark(
                 )
             }
         }
-        // 냄새가 안나는 곳에 자신의 냄새가 안나는 곳은 없다?
         return this
     }
 }
