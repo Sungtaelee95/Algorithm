@@ -14,7 +14,6 @@ const val DOWN = 4
 const val NONE = 0
 const val CHECK_POINT = 5
 
-
 // 방향
 val rightNode = Node(0, 1)
 val leftNode = Node(0, -1)
@@ -189,8 +188,6 @@ private fun hitterOn() {
     }
 }
 
-// 수정이 필요한 부분 기둥에 막혀 바람이 가면 안될 곳에 바람이 가는 문제 있음
-// 그림 5,6 확인.
 private fun makeUpHistory(startNode: Node, direNode: Node, windDire: Array<Node>): Array<IntArray> {
     val visited = Array(r) { BooleanArray(c) }
     val upHistory = Array(r) { IntArray(c) }
@@ -215,6 +212,7 @@ private fun makeUpHistory(startNode: Node, direNode: Node, windDire: Array<Node>
         if (nr < 0 || nc < 0 || nr >= r || nc >= c || visited[nr][nc]) continue
         if (block_map[now.row][now.col].contains(Node(nr, nc))) continue
         dq.addLast(Wind(nr, nc, now.template - 1, false))
+        visited[nr][nc] = true
     }
     return upHistory
 }
